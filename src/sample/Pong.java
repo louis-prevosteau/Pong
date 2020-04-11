@@ -30,16 +30,19 @@ public class Pong extends Application {
     private int scoreP1 = 0;
     private int scoreP2 = 0;
     private boolean start;
+    private boolean win;
     private double P1XPos = 0;
     private double P2XPos = height - PLAYER_WIDTH;
 
     public void start(Stage stage) throws Exception{
+        // Window
         stage.setTitle("Pong");
         Canvas canvas = new Canvas(width,height);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Timeline t1 = new Timeline(new KeyFrame(Duration.millis(10), e ->run(gc)));
         t1.setCycleCount(Timeline.INDEFINITE);
 
+        // Mouse moves
         canvas.setOnMouseMoved(event -> P1YPos = event.getY());
         canvas.setOnMouseClicked(event -> start = true);
         stage.setScene(new Scene(new StackPane(canvas)));
@@ -53,6 +56,7 @@ public class Pong extends Application {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font(20));
 
+        // Game
         if (start){
             BallXPos += ballXSpeed;
             BallYPos += ballYSpeed;
@@ -98,6 +102,17 @@ public class Pong extends Application {
         gc.fillText(scoreP1 + "\t\t\t\t\t" + scoreP2, width / 2, 100);
         gc.fillRect(P2XPos,P2YPos,PLAYER_WIDTH,PLAYER_HEIGHT);
         gc.fillRect(P1XPos,P1YPos,PLAYER_WIDTH,PLAYER_HEIGHT);
+
+        // End of the game
+        if (scoreP1 == 11 || scoreP2 == 11){
+            start = false;
+            win = true;
+            gc.setStroke(Color.WHITE);
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.strokeText("The game is finished",width / 2, height / 2);
+            scoreP1 = 0;
+            scoreP2 = 0;
+        }
     }
 
 }
